@@ -5,15 +5,15 @@ const AdmZip = require('adm-zip');
 const path = require('path');
 const fs = require('fs');
 
-// Dosya yükleme işlemi için gerekli ayarlar
+
 app.use(fileUpload());
 
-// Ana sayfa
+
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-// Zip dosyası kontrolü fonksiyonu
+
 function isZipFile(file) {
     return file.mimetype === 'application/zip' || file.name.endsWith('.zip');
 }
@@ -64,7 +64,6 @@ app.post('/upload', (req, res) => {
 
 
 
-// Sunucuyu dinleme
 const PORT = 3000;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
