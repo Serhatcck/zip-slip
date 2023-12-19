@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Zip Slip Vulnerability</title>
+    <!-- Bootstrap CDN integration -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .vulnerability-details {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <header class="bg-dark text-white text-center py-4">
+        <h1>Understanding Zip Slip Vulnerability</h1>
+    </header>
+
+    <div class="container mt-4">
+        <p>
+            Zip Slip is a critical security vulnerability that can be introduced into an application during file extraction processes. It occurs when an application improperly handles paths provided within a zip file, potentially allowing an attacker to perform directory traversal attacks.
+        </p>
+        <p>
+            To simulate a Zip Slip vulnerability, you can create a malicious zip file that includes a file path like this:
+        </p>
+        <div class="vulnerability-details">
+            <p>// Malicious zip command</p>
+            <pre><code>zip zipslip.zip ../../../../../../../../tmp/evil.sh</code></pre>
+        </div>
+        <p>
+            The above command creates a zip file named <code>zipslip.zip</code> and includes a file named <code>evil.sh</code> with a path attempting to traverse multiple directories. For demonstration purposes, the path assumes the existence of a file named <code>evil.sh</code> within the <code>/tmp/</code> directory. This path must exist on the system where the zip command is executed to simulate the Zip Slip vulnerability.
+        </p>
+        <p>
+            To demonstrate this vulnerability, here are examples of vulnerable code snippets in different programming languages:
+        </p>
+        <div class="vulnerability-details">
+            <p>// Vulnerable Node.js code snippet</p>
+            <pre><code>
+uploadedFile.mv(path.join(uploadPath, uploadedFile.name), (err) => {
+    if (err) {
+        return res.status(500).send(err);
+    }
+    let zip = new AdmZip(path.join(uploadPath, uploadedFile.name));
+    let zipEntries = zip.getEntries();
+    let uploadedFiles = [];
+    zipEntries.forEach((zipEntry) => {
+        let filePath = path.join(uploadPath, zipEntry.entryName);
+        fs.writeFileSync(filePath, zipEntry.getData(), 'binary');
+        uploadedFiles.push(filePath);
+    });
+    res.send(`Files uploaded and extracted to the upload folder: ${uploadedFiles.join(', ')}`);
+});
+            </code></pre>
+        </div>
+        <div class="vulnerability-details">
+            <p>// Vulnerable PHP code snippet</p>
+            <pre><code>
+&lt;?php
+if ($_FILES['file']['error'] > 0) {
+    echo 'Error: ' . $_FILES['file']['error'] . '&lt;br&gt;';
+} else {
+    $uploadPath = 'uploads/';
+    $zip = new ZipArchive;
+
+    if ($zip->open($_FILES['file']['tmp_name']) === TRUE) {
+        $zip->extractTo($uploadPath);
+        $zip->close();
+        echo 'Files uploaded and extracted to the upload folder.';
+    } else {
+        echo 'Failed to upload and extract the files.';
+    }
+}
+                
+?&gt;</code></pre>
+        </div>
+        <div class="vulnerability-details">
+            <p>// Vulnerable C# code snippet</p>
+            <pre><code>
+using System;
+using System.IO;
+using System.IO.Compression;
+
+class Program
+{
+    static void Main()
+    {
+        string uploadPath = "uploads\\";
+        string zipPath = "file.zip";
+
+        using (ZipArchive archive = ZipFile.OpenRead(zipPath))
+        {
+            foreach (ZipArchiveEntry entry in archive.Entries)
+            {
+                string fullPath = Path.Combine(uploadPath, entry.FullName);
+                entry.ExtractToFile(fullPath, true);
+            }
+        }
+        Console.WriteLine("Files uploaded and extracted to the upload folder.");
+    }
+}</code></pre>
+        </div>
+        <p>
+            In these code snippets, the application extracts the contents of a zip file without proper path validation. If an attacker crafts a malicious zip file with "../" paths, it could lead to extracting files outside the intended directory, possibly compromising sensitive system files.
+        </p>
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#uploadModal">
+            File Upload
+        </button>
+    </div>
+
+    <footer class="bg-dark text-white text-center py-3 mt-5">
+        <p>&copy; 2023 Zip Slip Vulnerability Description</p>
+    </footer>
+
+    <!-- File Upload Modal -->
+    <div class="modal" id="uploadModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">File Upload</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <!-- Modal Body -->
+                <div class="modal-body">
+                    <form action="/upload" method="post" enctype="multipart/form-data">
+                        <div class="form-group">
+                            <label for="file">Select File:</label>
+                            <input type="file" class="form-control-file" name="file" id="file">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Upload</button>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap and jQuery CDN integration -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

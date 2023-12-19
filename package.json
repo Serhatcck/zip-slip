@@ -1,0 +1,14 @@
+{
+  "name": "node-zip-upload-example",
+  "version": "1.0.0",
+  "description": "A Node.js example demonstrating file upload and zip extraction",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "express": "^4.17.2",
+    "express-fileupload": "^1.2.1",
+    "adm-zip": "^0.5.2"
+  }
+}
