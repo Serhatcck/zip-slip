@@ -1,4 +1,4 @@
-# ZipSlip Vulnerability Checker
+# ZipSlip Vulnerabil Machine
 
 
 ZipSlip is a critical security vulnerability that can occur during file extraction processes from zip files. This vulnerability arises when an application mishandles the paths included within a zip file, enabling attackers to conduct directory traversal attacks.
