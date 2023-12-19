@@ -1,4 +1,4 @@
-# ZipSlip Vulnerabil Machine
+# ZipSlip Vulnerable Machine
 
 
 ZipSlip is a critical security vulnerability that can occur during file extraction processes from zip files. This vulnerability arises when an application mishandles the paths included within a zip file, enabling attackers to conduct directory traversal attacks.
@@ -11,6 +11,7 @@ This project serves as a demonstration and tool to assess and understand the Zip
 - [Installation](#installation)
 - [Usage](#usage)
 - [Docker](#docker)
+- [Walkthrough](#walkthrough)
 
 ## Overview
 
@@ -42,3 +43,6 @@ docker build -t zipslip-vulnerability .
 ```bash
 docker run -p 3000:3000 zipslip-vulnerability
 ```
+
+### Walkthrough
+Very soon
